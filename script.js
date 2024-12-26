@@ -10,12 +10,12 @@ const calendar = document.querySelector(".calendar"),
   eventDate = document.querySelector(".event-date"),
   eventsContainer = document.querySelector(".events"),
   addEventBtn = document.querySelector(".add-event"),
-  addEventWrapper = document.querySelector(".add-event-wrapper "),
-  addEventCloseBtn = document.querySelector(".close "),
-  addEventTitle = document.querySelector(".event-name "),
-  addEventFrom = document.querySelector(".event-time-from "),
-  addEventTo = document.querySelector(".event-time-to "),
-  addEventSubmit = document.querySelector(".add-event-btn ");
+  addEventWrapper = document.querySelector(".add-event-wrapper"),
+  addEventCloseBtn = document.querySelector(".close"),
+  addEventTitle = document.querySelector(".event-name"),
+  addEventFrom = document.querySelector(".event-time-from"),
+  addEventTo = document.querySelector(".event-time-to"),
+  addEventSubmit = document.querySelector(".add-event-btn");
 
 let today = new Date();
 let activeDay;
@@ -33,35 +33,15 @@ const months = [
   "Agosto",
   "Setembro",
   "Outubro",
-  "Novevembro",
+  "Novembro",
   "Dezembro",
 ];
-
-
-
-// const eventsArr = [
-//   {
-//     day: 13,
-//     month: 11,
-//     year: 2022,
-//     events: [
-//       {
-//         title: "Event 1 lorem ipsun dolar sit genfa tersd dsad ",
-//         time: "10:00 AM",
-//       },
-//       {
-//         title: "Event 2",
-//         time: "11:00 AM",
-//       },
-//     ],
-//   },
-// ];
 
 const eventsArr = [];
 getEvents();
 console.log(eventsArr);
 
-//function to add days in days with class day and prev-date next-date on previous month and next month days and active on today
+// Function to add days in days with class day and prev-date next-date on previous month and next month days and active on today
 function initCalendar() {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -80,7 +60,6 @@ function initCalendar() {
   }
 
   for (let i = 1; i <= lastDate; i++) {
-    //check if event is present on that day
     let event = false;
     eventsArr.forEach((eventObj) => {
       if (
@@ -120,7 +99,7 @@ function initCalendar() {
   addListner();
 }
 
-//function to add month and year on prev and next button
+// Function to add month and year on prev and next button
 function prevMonth() {
   month--;
   if (month < 0) {
@@ -144,7 +123,7 @@ next.addEventListener("click", nextMonth);
 
 initCalendar();
 
-//function to add active on day
+// Function to add active on day
 function addListner() {
   const days = document.querySelectorAll(".day");
   days.forEach((day) => {
@@ -152,16 +131,14 @@ function addListner() {
       getActiveDay(e.target.innerHTML);
       updateEvents(Number(e.target.innerHTML));
       activeDay = Number(e.target.innerHTML);
-      //remove active
+      // Remove active
       days.forEach((day) => {
         day.classList.remove("active");
       });
-      //if clicked prev-date or next-date switch to that month
+      // If clicked prev-date or next-date switch to that month
       if (e.target.classList.contains("prev-date")) {
         prevMonth();
-        //add active to clicked day afte month is change
         setTimeout(() => {
-          //add active where no prev-date or next-date
           const days = document.querySelectorAll(".day");
           days.forEach((day) => {
             if (
@@ -174,7 +151,6 @@ function addListner() {
         }, 100);
       } else if (e.target.classList.contains("next-date")) {
         nextMonth();
-        //add active to clicked day afte month is changed
         setTimeout(() => {
           const days = document.querySelectorAll(".day");
           days.forEach((day) => {
@@ -231,15 +207,15 @@ function gotoDate() {
   alert("Data Inválida");
 }
 
-//function get active day day name and date and update eventday eventdate
+// Function get active day day name and date and update eventday eventdate
 function getActiveDay(date) {
   const day = new Date(year, month, date);
-  const dayName = day.toString().split(" ")[0];
+  const dayName = day.toLocaleDateString('pt-BR', { weekday: 'short' }); // Exibe o nome do dia em português (abreviado)
   eventDay.innerHTML = dayName;
   eventDate.innerHTML = date + " " + months[month] + " " + year;
 }
 
-//function update events when a day is active
+// Function update events when a day is active
 function updateEvents(date) {
   let events = "";
   eventsArr.forEach((event) => {
@@ -270,7 +246,7 @@ function updateEvents(date) {
   saveEvents();
 }
 
-//function to add event
+// Function to add event
 addEventBtn.addEventListener("click", () => {
   addEventWrapper.classList.toggle("active");
 });
@@ -285,14 +261,12 @@ document.addEventListener("click", (e) => {
   }
 });
 
-//allow 50 chars in eventtitle
+// Allow 50 chars in eventtitle
 addEventTitle.addEventListener("input", (e) => {
   addEventTitle.value = addEventTitle.value.slice(0, 60);
 });
 
-
-
-//allow only time in eventtime from and to
+// Allow only time in eventtime from and to
 addEventFrom.addEventListener("input", (e) => {
   addEventFrom.value = addEventFrom.value.replace(/[^0-9:]/g, "");
   if (addEventFrom.value.length === 2) {
@@ -313,7 +287,7 @@ addEventTo.addEventListener("input", (e) => {
   }
 });
 
-//function to add event to eventsArr
+// Function to add event to eventsArr
 addEventSubmit.addEventListener("click", () => {
   const eventTitle = addEventTitle.value;
   const eventTimeFrom = addEventFrom.value;
@@ -323,7 +297,6 @@ addEventSubmit.addEventListener("click", () => {
     return;
   }
 
-  //check correct time format 24 hour
   const timeFromArr = eventTimeFrom.split(":");
   const timeToArr = eventTimeTo.split(":");
   if (
@@ -341,7 +314,6 @@ addEventSubmit.addEventListener("click", () => {
   const timeFrom = convertTime(eventTimeFrom);
   const timeTo = convertTime(eventTimeTo);
 
-  //check if event is already added
   let eventExist = false;
   eventsArr.forEach((event) => {
     if (
@@ -360,12 +332,11 @@ addEventSubmit.addEventListener("click", () => {
     alert("Evento já existe");
     return;
   }
+
   const newEvent = {
     title: eventTitle,
     time: timeFrom + " - " + timeTo,
   };
-  console.log(newEvent);
-  console.log(activeDay);
   let eventAdded = false;
   if (eventsArr.length > 0) {
     eventsArr.forEach((item) => {
@@ -389,20 +360,18 @@ addEventSubmit.addEventListener("click", () => {
     });
   }
 
-  console.log(eventsArr);
   addEventWrapper.classList.remove("active");
   addEventTitle.value = "";
   addEventFrom.value = "";
   addEventTo.value = "";
   updateEvents(activeDay);
-  //select active day and add event class if not added
   const activeDayEl = document.querySelector(".day.active");
   if (!activeDayEl.classList.contains("event")) {
     activeDayEl.classList.add("event");
   }
 });
 
-//function to delete event when clicked on event
+// Function to delete event when clicked on event
 eventsContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("event")) {
     if (confirm("Are you sure you want to delete this event?")) {
@@ -418,10 +387,8 @@ eventsContainer.addEventListener("click", (e) => {
               event.events.splice(index, 1);
             }
           });
-          //if no events left in a day then remove that day from eventsArr
           if (event.events.length === 0) {
             eventsArr.splice(eventsArr.indexOf(event), 1);
-            //remove event class from day
             const activeDayEl = document.querySelector(".day.active");
             if (activeDayEl.classList.contains("event")) {
               activeDayEl.classList.remove("event");
@@ -434,28 +401,23 @@ eventsContainer.addEventListener("click", (e) => {
   }
 });
 
-//function to save events in local storage
+// Function to convert time to minutes
+function convertTime(time) {
+  const timeArr = time.split(":");
+  const hours = parseInt(timeArr[0]);
+  const minutes = parseInt(timeArr[1]);
+  return hours * 60 + minutes;
+}
+
+// Function to save events in localStorage
 function saveEvents() {
   localStorage.setItem("events", JSON.stringify(eventsArr));
 }
 
-//function to get events from local storage
+// Function to get events from localStorage
 function getEvents() {
-  //check if events are already saved in local storage then return event else nothing
-  if (localStorage.getItem("events") === null) {
-    return;
+  const storedEvents = localStorage.getItem("events");
+  if (storedEvents) {
+    eventsArr.push(...JSON.parse(storedEvents));
   }
-  eventsArr.push(...JSON.parse(localStorage.getItem("events")));
 }
-
-function convertTime(time) {
-  //convert time to 24 hour format
-  let timeArr = time.split(":");
-  let timeHour = timeArr[0];
-  let timeMin = timeArr[1];
-  let timeFormat = timeHour >= 12 ? "PM" : "AM";
-  timeHour = timeHour % 12 || 12;
-  time = timeHour + ":" + timeMin + " " + timeFormat;
-  return time;
-}
-
